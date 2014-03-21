@@ -3,6 +3,9 @@
   <h1><%=t '.title', :default => ("#{@station.name}, #{@station.address}, #{@station.city}") %></h1>
 </div>
 
+
+
+<!-- dane stacji -->
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:brand) %>:</strong></dt>
   <dd><%= @station.name %></dd>
@@ -15,6 +18,9 @@
   <dt><strong><%= model_class.human_attribute_name(:latitude) %>:</strong></dt>
   <dd><%= @station.latitude %></dd>
   <dt><strong><%= model_class.human_attribute_name(:prices) %>:</strong></dt>
+ 
+ 
+  <!-- ceny paliw -->
   <dd>
   <table class="table">
   
@@ -45,6 +51,27 @@
   </dd>
 </dl>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- back edit delete -->
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               stations_path, :class => 'btn'  %>

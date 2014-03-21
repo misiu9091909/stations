@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
-<table class="table table-striped">
+<table class="table table-hover">
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
@@ -17,21 +17,12 @@
   </thead>
   <tbody>
     <% @stations.each do |station| %>
-      <tr >
+      <tr onclick="location.href=' <%= station_path(station) %>'">
         <td><%= link_to station.id, station_path(station) %></td>
         <td><%= station.name %></td>
         <td><%= station.address %></td>
         <td><%= station.city %></td>
-
-        <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_station_path(station), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      station_path(station),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
-        </td>
+        
       </tr>
     <% end %>
   </tbody>

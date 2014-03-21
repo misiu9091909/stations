@@ -19,6 +19,7 @@
     </tr>
   </thead>
   
+  <tbody>
    <% @brand.stations.each do |station| %>
       <tr onclick="location.href=' <%= station_path(station) %>'" >
         <td><%= station['city'] %></td>
@@ -34,7 +35,7 @@
              
       </tr>
     <% end %>
-
+  </tbody> 
 </table>
 
 <div class="form-actions">
