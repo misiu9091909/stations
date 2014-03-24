@@ -7,35 +7,36 @@
 <table class="table table-hover">
 
   <thead>
-    <tr>
-      <th><%= Station.human_attribute_name(:city) %></th>
-      <th><%= Station.human_attribute_name(:address) %></th>
+  <tr>
+    <th><%= Station.human_attribute_name(:city) %></th>
+    <th><%= Station.human_attribute_name(:address) %></th>
 
-      <% @types.each do |type| %>
+    <% @types.each do |type| %>
         <th><%= type %></th>
-      
 
-      <% end %>
-    </tr>
+
+    <% end %>
+  </tr>
   </thead>
-  
+
   <tbody>
-   <% @brand.stations.each do |station| %>
+  <% @brand.stations.each do |station| %>
       <tr onclick="location.href=' <%= station_path(station) %>'" >
         <td><%= station['city'] %></td>
         <td><%= station['address'] %></td>
-        
-          
+
         <% @types.each do |type| %>
-          <td>
-          <% fuel_price = station.prices.find_by(fuel_type: type) %>
-          <%= fuel_price.price if fuel_price %>
-          </td>
+            <td>
+              <% fuel_price = station.prices.find_by(fuel_type: type) %>
+              <%= fuel_price.price if fuel_price %>
+            </td>
         <% end %>
-             
+
+
+
       </tr>
-    <% end %>
-  </tbody> 
+  <% end %>
+  </tbody>
 </table>
 
 <div class="form-actions">

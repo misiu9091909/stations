@@ -7,7 +7,9 @@ Stations::Application.routes.draw do
     resources :stations
   end
 
-  resources :stations
+  resources :stations do
+    get 'show_nearest_stations', on: :collection, format: false
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

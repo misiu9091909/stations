@@ -3,31 +3,32 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
+<%= link_to 'Show nearest stations', action: :show_nearest_stations %>
+
+
 <table class="table table-hover">
   <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:address) %></th>
-      <th><%= model_class.human_attribute_name(:city) %></th>
-
-
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
+  <tr>
+    <th><%= model_class.human_attribute_name(:id) %></th>
+    <th><%= model_class.human_attribute_name(:name) %></th>
+    <th><%= model_class.human_attribute_name(:address) %></th>
+    <th><%= model_class.human_attribute_name(:city) %></th>
+  </tr>
   </thead>
   <tbody>
-    <% @stations.each do |station| %>
+  <% @stations.each do |station| %>
       <tr onclick="location.href=' <%= station_path(station) %>'">
         <td><%= link_to station.id, station_path(station) %></td>
         <td><%= station.name %></td>
         <td><%= station.address %></td>
         <td><%= station.city %></td>
-        
+
       </tr>
-    <% end %>
+  <% end %>
   </tbody>
 </table>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_station_path,
             :class => 'btn btn-primary' %>
+

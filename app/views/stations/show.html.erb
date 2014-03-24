@@ -18,51 +18,74 @@
   <dt><strong><%= model_class.human_attribute_name(:latitude) %>:</strong></dt>
   <dd><%= @station.latitude %></dd>
   <dt><strong><%= model_class.human_attribute_name(:prices) %>:</strong></dt>
- 
- 
+
+
+
   <!-- ceny paliw -->
   <dd>
-  <table class="table">
-  
-    <thead>
+    <table class="table">
+
+      <thead>
       <tr>
         <% @types.each do |type| %>
-          <th><%= type %></th>
+            <th><%= type %></th>
         <% end %>
       </tr>
-    </thead>
-    
+      </thead>
+
       <tr>
-        <% @station.prices.each do |price_info| %>
-          
-            <% unless price_info['price'].nil? then %>
+        <% @types.each do |type| %>
             <td>
-              <% @types.each do |type| %>
-                <% fuel_price = @station.prices.find_by(fuel_type: type) %>
-                <%= fuel_price.price if fuel_price %>
-              <% end %>
-            </td>  
-            <% end %>
-          
+              <% fuel_price = @station.prices.find_by(fuel_type: type) %>
+              <%= fuel_price.price if fuel_price %>
+            </td>
         <% end %>
-             
       </tr>
-  </table>
+    </table>
   </dd>
 </dl>
 
+<% if @station.prices.size > 0 %>
+    <p style="text-align: right">Last prices update: <%= time_ago_in_words @station.prices[0].updated_at %></p>
+<% end %>
+
+<div style='width: 800px;'>
+  <div id="map" style='width: 800px; height: 500px;'></div>
+</div>
+
+<script>
+    function setGeoCookie(position){
+        document.cookie = "lat=" + escape(position.coords.latitude);
+        document.cookie = "lon=" + escape(position.coords.longitude);
+
+    }
+    navigator.geolocation.getCurrentPosition(setGeoCookie);
+    handler = Gmaps.build('Google');
+    handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+        markers = handler.addMarkers([
+            {
+                "lat": <%= @station['latitude'] %>,
+                "lng": <%= @station['longitude'] %>,
+                "picture": {
+                    "url": "public/stacja.png",
+                    "width":  36,
+                    "height": 36
+                },
+                "infowindow": "<%= " #{@station['name']}, #{@station['address']}, #{@station['city']} " %>"
+            }
+        ]);
+        handler.bounds.extendWith(markers);
+        handler.fitMapToBounds();
+    });
+</script>
 
 
+<%= @cookies %>
 
 
-
-
-
-
-
-
-
-
+<br><br>
+<!-- Your ip is: <%# request.remote_ip %> -->
+<br><br>
 
 
 
@@ -83,4 +106,3 @@
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
 </div>
-  

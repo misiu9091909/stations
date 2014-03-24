@@ -1,6 +1,8 @@
 class StationsController < ApplicationController
   before_action :set_station, only: [:show, :edit, :update, :destroy]
 
+
+
   # GET /stations
   # GET /stations.json
   def index
@@ -8,8 +10,9 @@ class StationsController < ApplicationController
       @brand = Brand.find_by_id(params[:brand_id])
       @prices = @brand.prices
       @types = @prices.pluck(:fuel_type).uniq.sort
-      
-      render "show_stations_prices"
+
+
+      render 'show_stations_prices'
     else
       @stations = Station.all
     end
@@ -18,9 +21,40 @@ class StationsController < ApplicationController
   # GET /stations/1
   # GET /stations/1.json
   def show
-      @stations = Station.all
-      @types = @station.prices.pluck(:fuel_type).uniq.sort
+    @stations = Station.all
+
+    @types = @station.prices.pluck(:fuel_type).uniq.sort
+
   end
+
+  def show_nearest_stations
+    site = [51.1, 17.03]
+    @nearest_stations = Station.within(4, :origin => site)
+
+    @types = []
+    if @nearest_stations
+      all_types = []
+      @nearest_stations.each do |station|
+        station.prices.each do |price|
+          all_types << price['fuel-type']
+        end
+      end
+      @types = all_types.uniq.sort
+    end
+
+    @nearest_locations = []
+    @nearest_stations.each do |station|
+      @nearest_locations << [station.latitude, station.longitude, "#{station.name}, #{station.address}, #{station.city}"]
+    end
+
+    @hash = Gmaps4rails.build_markers(@nearest_locations) do |station, marker|
+      marker.lat station[0]
+      marker.lng station[1]
+    end
+
+
+  end
+
 
   # GET /stations/new
   def new
@@ -76,6 +110,7 @@ class StationsController < ApplicationController
     def set_station
       @station = Station.find(params[:id])
     end
+
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def station_params
