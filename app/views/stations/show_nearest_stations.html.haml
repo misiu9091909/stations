@@ -1,0 +1,34 @@
+- model_class = Station
+.page-header
+  %h1 Nearest stations
+/ odległość
+.btn-group.btn-group-sm
+/ lista stacji
+.container-fluid
+  - @nearest_stations.each do |station|
+    .row-fluid.well{:onclick => "location.href=' #{station_path(station)}'"}
+      %span.badge= station['name']
+      %span.col-md-2= station['city']
+      %span.col-md-2= station['address']
+      %span.col-md-6
+        - station.prices.sort_by{|x| x.fuel_type}.each do |price|
+          %span.label.label-success
+            = price.fuel_type
+            %span.badge
+              = price.price
+/ mapa
+%div{:style => "width: 800px;"}
+  #map{:style => "width: 800px; height: 800px;"}
+:javascript
+  function setGeoCookie(position){
+      document.cookie = "lat=" + escape(position.coords.latitude);
+      document.cookie = "lon=" + escape(position.coords.longitude);
+  }
+  navigator.geolocation.getCurrentPosition(setGeoCookie);
+
+  handler = Gmaps.build('Google');
+  handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+      markers = handler.addMarkers(#{raw @hash.to_json});
+      handler.bounds.extendWith(markers);
+      handler.fitMapToBounds();
+  });

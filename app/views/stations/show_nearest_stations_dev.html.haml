@@ -1,0 +1,45 @@
+\-model_class = Station
+\%div.class="page-header">
+%h1 Nearest stations
+/ typy
+.btn-group.btn-group-sm
+  - @types_list.each do |type|
+    = link_to "#{type}", {action: :show_nearest_stations_dev, fuel_type: type}, class: "btn btn-default"
+%br/
+%br/
+/ lista stacji
+.container-fluid
+  - @nearest_stations.each do |station|
+    .row-fluid.well{:onclick => "location.href=' #{station_path(station)}'"}
+      %span.badge= station['name']
+      %span.col-md-2= station['city']
+      %span.col-md-2= station['address']
+      / ceny
+      %span.col-md-6
+        - if @types_show.size>1
+          - station.prices.sort_by{|x| x.fuel_type}.each do |price|
+            %span.label.label-success
+              = price.fuel_type
+              %span.badge
+                = price.price
+        - else
+          %span.label.label-success
+            = @types_show[0]
+            %span.badge
+              = station.prices.find_by(fuel_type: @types_show).price if station.prices.find_by(fuel_type: @types_show)
+/ mapa
+%div{:style => "width: 800px;"}
+  #map{:style => "width: 800px; height: 800px;"}
+:javascript
+  function setGeoCookie(position){
+      document.cookie = "lat=" + escape(position.coords.latitude);
+      document.cookie = "lon=" + escape(position.coords.longitude);
+  }
+  navigator.geolocation.getCurrentPosition(setGeoCookie);
+
+  handler = Gmaps.build('Google');
+  handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+      markers = handler.addMarkers(#{raw @sites_list.to_json});
+      handler.bounds.extendWith(markers);
+      handler.fitMapToBounds();
+  });

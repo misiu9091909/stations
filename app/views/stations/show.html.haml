@@ -1,0 +1,97 @@
+- model_class = Station
+.page-header
+  %h1= t '.title', :default => ("#{@station.name}, #{@station.address}, #{@station.city}")
+/ dane stacji
+%dl.dl-horizontal
+  %dt
+    %strong
+      = model_class.human_attribute_name(:brand)
+      \:
+  %dd= @station.name
+  %dt
+    %strong
+      = model_class.human_attribute_name(:address)
+      \:
+  %dd= @station.address
+  %dt
+    %strong
+      = model_class.human_attribute_name(:city)
+      \:
+  %dd= @station.city
+  %dt
+    %strong
+      = model_class.human_attribute_name(:longitude)
+      \:
+  %dd= @station.longitude
+  %dt
+    %strong
+      = model_class.human_attribute_name(:latitude)
+      \:
+  %dd= @station.latitude
+  %dt
+    %strong
+      = model_class.human_attribute_name(:prices)
+      \:
+  / ceny paliw
+  %dd
+    %table.table
+      %thead
+        %tr
+          - @types.each do |type|
+            %th= type
+      %tr
+        - @types.each do |type|
+          %td
+            - fuel_price = @station.prices.find_by(fuel_type: type)
+            = fuel_price.price if fuel_price
+- if @station.prices.size > 0
+  %p{:style => "text-align: right"}
+    Last prices update: #{time_ago_in_words @station.prices[0].updated_at}
+%div{:style => "width: 800px;"}
+  #map{:style => "width: 800px; height: 500px;"}
+:javascript
+  function setGeoCookie(position){
+      document.cookie = "lat=" + escape(position.coords.latitude);
+      document.cookie = "lon=" + escape(position.coords.longitude);
+
+  }
+  navigator.geolocation.getCurrentPosition(setGeoCookie);
+  handler = Gmaps.build('Google');
+
+  var mapOptions = { mapTypeId: google.maps.MapTypeId.ROADMAP, zoom: 15, center: new google.maps.LatLng(#{@my_location[0]}, #{@my_location[1]}) };
+  handler.buildMap({ provider: mapOptions, internal: {id: 'map'}}, function(){
+      markers = handler.addMarkers([
+          {
+              "lat": #{@station['latitude']},
+              "lng": #{@station['longitude']},
+              "infowindow": "#{" \#{@station['name']}, \#{@station['address']}, \#{@station['city']} "}",
+
+          },
+          {
+              "lat": #{@my_location[0]},
+              "lng": #{@my_location[1]},
+              "infowindow": "tu jesteś"
+          }
+      ]);
+      handler.bounds.extendWith(markers);
+      handler.fitMapToBounds();
+  });
+= @cookies
+%br/
+%br/
+/ Your ip is: </haml:block><haml:silent></haml:silent><haml:block>
+%br/
+%br/
+/ back edit delete
+.form-actions
+  = link_to t('.back', :default => t("helpers.links.back")), |
+    stations_path, :class => 'btn'                           |
+  -#
+  = link_to t('.edit', :default => t("helpers.links.edit")), |
+    edit_station_path(@station), :class => 'btn'             |
+  -#
+  = link_to t('.destroy', :default => t("helpers.links.destroy")),                                               |
+    station_path(@station),                                                                                      |
+    :method => 'delete',                                                                                         |
+    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, |
+    :class => 'btn btn-danger'                                                                                   |

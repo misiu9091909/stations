@@ -1,0 +1,23 @@
+- model_class = Station
+.page-header
+  %h1= t '.title', :default => model_class.model_name.human.pluralize.titleize
+= link_to 'Show nearest stations', action: :show_nearest_stations
+%br/
+= link_to 'Show nearest stations (michal)', action: :show_nearest_stations_dev
+%table.table.table-hover
+  %thead
+    %tr
+      %th= model_class.human_attribute_name(:id)
+      %th= model_class.human_attribute_name(:name)
+      %th= model_class.human_attribute_name(:address)
+      %th= model_class.human_attribute_name(:city)
+  %tbody
+    - @stations.each do |station|
+      %tr{:onclick => "location.href=' #{station_path(station)}'"}
+        %td= link_to station.id, station_path(station)
+        %td= station.name
+        %td= station.address
+        %td= station.city
+= link_to t('.new', :default => t("helpers.links.new")), |
+  new_station_path,                                      |
+  :class => 'btn btn-primary'                            |
