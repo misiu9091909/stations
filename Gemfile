@@ -53,3 +53,6 @@ gem    'twitter-bootstrap-rails'
 gem 'gmaps4rails', '~> 2.1.2'
 
 gem 'geokit-rails'
+
+gem 'haml'
+gem 'haml-rails'

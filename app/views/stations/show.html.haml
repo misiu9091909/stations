@@ -47,8 +47,13 @@
 - if @station.prices.size > 0
   %p{:style => "text-align: right"}
     Last prices update: #{time_ago_in_words @station.prices[0].updated_at}
+
+
+
+
 %div{:style => "width: 800px;"}
   #map{:style => "width: 800px; height: 500px;"}
+
 :javascript
   function setGeoCookie(position){
       document.cookie = "lat=" + escape(position.coords.latitude);
@@ -64,7 +69,7 @@
           {
               "lat": #{@station['latitude']},
               "lng": #{@station['longitude']},
-              "infowindow": "#{" \#{@station['name']}, \#{@station['address']}, \#{@station['city']} "}",
+              "infowindow": "abc",
 
           },
           {
@@ -76,7 +81,7 @@
       handler.bounds.extendWith(markers);
       handler.fitMapToBounds();
   });
-= @cookies
+
 %br/
 %br/
 / Your ip is: </haml:block><haml:silent></haml:silent><haml:block>

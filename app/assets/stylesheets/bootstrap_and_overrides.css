@@ -5,4 +5,10 @@
   To use Glyphicons sprites instead of Font Awesome, replace with "require twitter-bootstrap-static/sprites"
   =require twitter-bootstrap-static/fontawesome
   */
-body { padding-top: 60px; }  
+body { padding-top: 60px; }
+#map img {
+    max-width: none;
+}
+#map label {
+    width: auto; display:inline;
+}

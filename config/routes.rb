@@ -8,15 +8,19 @@ Stations::Application.routes.draw do
   end
 
   resources :stations do
-    get 'show_nearest_stations', on: :collection, format: false
+    collection do
+      get 'nearest/range(/:range)', format: false, to: 'stations#show_nearest_stations', defaults: {range: 2}
+      get 'nearest_dev/range(/:range)/fuel_type(/:fuel_type)', format: false, to: 'stations#show_nearest_stations_dev', defaults: {range: 2, fuel_type: "all"}
+    end
+
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'brands#index'
-  
+  root 'stations#show_nearest_stations', defaults: {range: 2}
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

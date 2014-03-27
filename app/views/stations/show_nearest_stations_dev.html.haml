@@ -1,5 +1,5 @@
-\-model_class = Station
-\%div.class="page-header">
+-model_class = Station
+%div.class="page-header"
 %h1 Nearest stations
 / typy
 .btn-group.btn-group-sm
@@ -8,6 +8,13 @@
 %br/
 %br/
 / lista stacji
+- @nearest_stations.each do |station|
+  = station
+%br/
+%br/
+= @types_show
+
+
 .container-fluid
   - @nearest_stations.each do |station|
     .row-fluid.well{:onclick => "location.href=' #{station_path(station)}'"}
@@ -28,8 +35,8 @@
             %span.badge
               = station.prices.find_by(fuel_type: @types_show).price if station.prices.find_by(fuel_type: @types_show)
 / mapa
-%div{:style => "width: 800px;"}
-  #map{:style => "width: 800px; height: 800px;"}
+
+#map{:style => "width: 800px; height: 800px;"}
 :javascript
   function setGeoCookie(position){
       document.cookie = "lat=" + escape(position.coords.latitude);

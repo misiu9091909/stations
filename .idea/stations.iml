@@ -143,6 +143,8 @@
     <orderEntry type="library" scope="PROVIDED" name="geokit (v1.8.4, ruby-1.8.7-p358) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="geokit-rails (v2.0.1, ruby-1.8.7-p358) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="gmaps4rails (v2.1.2, ruby-1.8.7-p358) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="haml (v4.0.5, ruby-1.8.7-p358) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="haml-rails (v0.5.3, ruby-1.8.7-p358) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hike (v1.2.3, ruby-1.8.7-p358) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="httparty (v0.13.0, ruby-1.8.7-p358) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="i18n (v0.6.9, ruby-1.8.7-p358) [gem]" level="application" />

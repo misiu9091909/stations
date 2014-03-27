@@ -22,38 +22,84 @@ class StationsController < ApplicationController
   # GET /stations/1.json
   def show
     @stations = Station.all
-
+    @my_location = my_location
     @types = @station.prices.pluck(:fuel_type).uniq.sort
-
+    @hash = Gmaps4rails.build_markers(@stations) do |station, marker|
+      marker.lat station[0]
+      marker.lng station[1]
+    end
   end
 
   def show_nearest_stations
-    site = [51.1, 17.03]
-    @nearest_stations = Station.within(4, :origin => site)
+    @site = [51.1, 17.03]
+    @range = params[:range]
+    @nearest_stations = Station.within(@range, :origin => @site)
 
     @types = []
     if @nearest_stations
-      all_types = []
-      @nearest_stations.each do |station|
-        station.prices.each do |price|
-          all_types << price['fuel-type']
-        end
-      end
       @types = all_types.uniq.sort
     end
 
-    @nearest_locations = []
+    @nearest_stations = []
     @nearest_stations.each do |station|
-      @nearest_locations << [station.latitude, station.longitude, "#{station.name}, #{station.address}, #{station.city}"]
+      @nearest_stations << [station.latitude, station.longitude, "#{station.name}, #{station.address}, #{station.city}"]
     end
 
-    @hash = Gmaps4rails.build_markers(@nearest_locations) do |station, marker|
+    @hash = Gmaps4rails.build_markers(@nearest_stations) do |station, marker|
       marker.lat station[0]
       marker.lng station[1]
     end
 
+  end
+
+
+
+  def show_nearest_stations_dev
+    @my_location = my_location
+    @fuel_type = params[:fuel_type]
+    @types_list = all_types
+    @range = params[:range]
+    if @fuel_type == "all"
+      @nearest_stations = Station.joins(:prices).where("price > ?", 1).within(@range, :origin => my_location).uniq
+    else
+      @nearest_stations = Station.joins(:prices).where("price > ? and fuel_type = ?", 1, @fuel_type).within(@range, :origin => my_location)
+    end
+
+    if @fuel_type == 'all'
+      @types_show = @all_types
+    else
+      @types_show = []
+      @types_show << @fuel_type
+    end
+
+
+    @sites_list = Gmaps4rails.build_markers(@nearest_stations) do |station, marker|
+      marker.lat station['latitude']
+      marker.lng station['longitude']
+
+      if @fuel_type == 'all'
+        marker.title station['name']
+      else
+        marker.title "#{station['name']}, #{@fuel_price} "
+      end
+
+
+            @infowindow_text = "#{station['name']}, #{station['address']}, #{station['city']}"
+      fuel = station.prices.find_by(fuel_type: @fuel_type)
+      @fuel_price = fuel.price if fuel and fuel !=0
+
+      @all_types.each do |type|
+        fuel = station.prices.find_by(fuel_type: type)
+        @infowindow_text << " - #{fuel.fuel_type}: #{fuel.price}" if fuel and fuel != 0
+      end
+
+      marker.infowindow @infowindow_text
+
+    end
 
   end
+
+
 
 
   # GET /stations/new
@@ -116,4 +162,23 @@ class StationsController < ApplicationController
     def station_params
       params.require(:station).permit(:name, :address, :city, :longitude, :latitude, :brand_id)
     end
+
+    def my_location
+      lat = request.cookies['lat']
+      lng = request.cookies['lon']
+      my_location = [lat, lng]
+    end
+
+    def all_types
+      @all_types = []
+      @stations = Station.all
+
+      @stations.each do |station|
+        station.prices.each do |price|
+          @all_types << price['fuel_type']
+        end
+      end
+      @all_types = @all_types.uniq.sort
+    end
+
 end
