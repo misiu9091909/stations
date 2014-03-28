@@ -56,3 +56,4 @@ gem 'geokit-rails'
 
 gem 'haml'
 gem 'haml-rails'
+gem 'devise'

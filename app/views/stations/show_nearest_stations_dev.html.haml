@@ -1,5 +1,5 @@
 -model_class = Station
-%div.class="page-header"
+.page-header
 %h1 Nearest stations
 / typy
 .btn-group.btn-group-sm
@@ -36,14 +36,10 @@
               = station.prices.find_by(fuel_type: @types_show).price if station.prices.find_by(fuel_type: @types_show)
 / mapa
 
-#map{:style => "width: 800px; height: 800px;"}
-:javascript
-  function setGeoCookie(position){
-      document.cookie = "lat=" + escape(position.coords.latitude);
-      document.cookie = "lon=" + escape(position.coords.longitude);
-  }
-  navigator.geolocation.getCurrentPosition(setGeoCookie);
 
+
+#map{style: "width: 800px ; height: 800px"}
+:javascript
   handler = Gmaps.build('Google');
   handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
       markers = handler.addMarkers(#{raw @sites_list.to_json});

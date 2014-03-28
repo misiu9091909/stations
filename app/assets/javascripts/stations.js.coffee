@@ -35,7 +35,7 @@ handler.buildMap { internal: id: "custom_builder" }, ->
     lat:               40.689167
     lng:               -74.044444
     custom_marker:     "<div style='font-color: blue'> Statue of Liberty </div>"
-    custom_infowindow: "<img src='images/statue.jpg' width='90' height='140'> The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in the middle of New York"
+    custom_infowindow: "abcd"
 
   handler.map.centerOn marker
   handler.getMap().setZoom(15)

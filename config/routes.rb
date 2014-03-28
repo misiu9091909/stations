@@ -1,4 +1,5 @@
 Stations::Application.routes.draw do
+  devise_for :users
   resources :prices
 
   resources :price_lists
@@ -19,7 +20,7 @@ Stations::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'stations#show_nearest_stations', defaults: {range: 2}
+  root 'stations#show_nearest_stations_dev', defaults: {range: 2, fuel_type: "all"}
 
 
   # Example of regular route:
